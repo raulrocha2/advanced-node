@@ -1,0 +1,24 @@
+{
+  "name": "advanced-node-02",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/raulrocha2/advanced-node.git",
+  "author": "raulrocha2 <raul.rocha2@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "start": "node dist/"
+  },
+  "devDependencies": {
+    "@types/module-alias": "^2.0.4",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.3",
+    "rimraf": "^5.0.5"
+  }
+}
