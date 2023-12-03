@@ -3,3 +3,4 @@ node_modules
 *folder-*
 dist
 coverage
+jest.config.js
