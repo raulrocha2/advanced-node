@@ -1,0 +1,12 @@
+{
+  "extends": "standard-with-typescript",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/consistent-type-imports": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "@typescript-eslint/no-confusing-void-expression": "off"
+  }
+}

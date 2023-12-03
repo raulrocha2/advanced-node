@@ -6,13 +6,21 @@
   "author": "raulrocha2 <raul.rocha2@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf dist && tsc",
-    "start": "node dist/"
+    "build": "rimraf dist && tsc -p tsconfig-build.json",
+    "start": "node dist/",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix"
   },
   "devDependencies": {
     "@types/module-alias": "^2.0.4",
     "@types/node": "^20.10.0",
-    "typescript": "^5.3.2"
+    "@typescript-eslint/eslint-plugin": "^6.4.0",
+    "eslint": "8.0.1",
+    "eslint-config-standard-with-typescript": "^40.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-n": "^15.0.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "typescript": "*"
   },
   "engines": {
     "node": "18.x"
