@@ -1,15 +1,15 @@
 {
   "name": "advanced-node-02",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/raulrocha2/advanced-node.git",
-  "author": "raulrocha2 <raul.rocha2@gmail.com>",
-  "license": "MIT",
+  "main": "",
+  "repository": "",
+  "author": "",
+  "license": "",
   "type": "commonjs",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "start": "node dist/",
-    "lint": "eslint .",
+    "lint": "eslint",
     "lint:fix": "npm run lint -- --fix",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm test -- --watch",
@@ -46,5 +46,10 @@
   "resolutions": {
     "wrap-ansi": "7.0.0",
     "string-width": "4.1.0"
-  }
+  },
+  "lint-staged": {
+    "*.ts": "eslint --fix"
+  },
+  "description": "",
+  "private": true
 }
