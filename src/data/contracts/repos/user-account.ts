@@ -8,11 +8,11 @@ export namespace LoadUserAccountRepo {
   }
 }
 
-export interface CreateUserAccountRepository {
-  createFromFacebook: (params: CreateUserAccountRepo.Params) => Promise<void>
+export interface CreateFacebookAccountRepository {
+  createFromFacebook: (params: CreateFacebookAccountRepo.Params) => Promise<void>
 }
 
-export namespace CreateUserAccountRepo {
+export namespace CreateFacebookAccountRepo {
   export type Params = {
     name: string
     email: string

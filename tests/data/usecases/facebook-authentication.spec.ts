@@ -1,5 +1,5 @@
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { CreateUserAccountRepository, LoadUserAccountRepository } from '@/data/contracts/repos'
+import { CreateFacebookAccountRepository, LoadUserAccountRepository } from '@/data/contracts/repos'
 import { FacebookAuthenticationUsecase } from '@/data/usecases'
 import { AuthenticationError } from '@/domain/errors'
 import { mock, MockProxy } from 'jest-mock-extended'
@@ -7,14 +7,14 @@ import { mock, MockProxy } from 'jest-mock-extended'
 
 describe('FacebookAuthenticationUsecase', () => {
   let sut: FacebookAuthenticationUsecase
-  let loadFacebookUserApiSpy: MockProxy<LoadFacebookUserApi>
-  let userAccountRepo: MockProxy<LoadUserAccountRepository & CreateUserAccountRepository>
+  let facebookApiSpy: MockProxy<LoadFacebookUserApi>
+  let userAccountRepo: MockProxy<LoadUserAccountRepository & CreateFacebookAccountRepository>
   let token = 'any_token'
   beforeEach(() => {
-    loadFacebookUserApiSpy = mock<LoadFacebookUserApi>()
+    facebookApiSpy = mock<LoadFacebookUserApi>()
     userAccountRepo = mock()
-    sut = new FacebookAuthenticationUsecase(loadFacebookUserApiSpy, userAccountRepo)
-    loadFacebookUserApiSpy.loadUser.mockResolvedValue({
+    sut = new FacebookAuthenticationUsecase(facebookApiSpy, userAccountRepo)
+    facebookApiSpy.loadUser.mockResolvedValue({
       name: 'any_fb_name',
       email: 'any_fb_email',
       facebookId: 'any_fb_id'
@@ -23,12 +23,12 @@ describe('FacebookAuthenticationUsecase', () => {
 
   test('should call LoadFacebookUserApi with correct params', async () => {
     await sut.perform({ token })
-    expect(loadFacebookUserApiSpy.loadUser).toHaveBeenCalledWith({ token })
-    expect(loadFacebookUserApiSpy.loadUser).toHaveBeenCalledTimes(1)
+    expect(facebookApiSpy.loadUser).toHaveBeenCalledWith({ token })
+    expect(facebookApiSpy.loadUser).toHaveBeenCalledTimes(1)
   })
 
   test('should return AuthenticationError when LoadFacebookUserApi returns undefined', async () => {
-    loadFacebookUserApiSpy.loadUser.mockResolvedValueOnce(undefined)
+    facebookApiSpy.loadUser.mockResolvedValueOnce(undefined)
     const authResult = await sut.perform({ token })
     expect(authResult).toEqual(new AuthenticationError())
   })
@@ -39,7 +39,7 @@ describe('FacebookAuthenticationUsecase', () => {
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
   })
 
-  test('should calls CreateUserAccountRepo when LoadFacebookUserApi returns undefined', async () => {
+  test('should calls CreateFacebookAccountRepo when LoadFacebookUserApi returns undefined', async () => {
     await sut.perform({ token })
     expect(userAccountRepo.createFromFacebook).toHaveBeenCalledWith({
       name: 'any_fb_name',
@@ -48,5 +48,6 @@ describe('FacebookAuthenticationUsecase', () => {
      })
     expect(userAccountRepo.createFromFacebook).toHaveBeenCalledTimes(1)
   })
+  
 })
 

@@ -1,12 +1,12 @@
 import { FacebookAuthentication } from '@/domain/features'
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
 import { AuthenticationError } from '@/domain/errors'
-import { CreateUserAccountRepository, LoadUserAccountRepository } from '../contracts/repos'
+import { CreateFacebookAccountRepository, LoadUserAccountRepository } from '../contracts/repos'
 
 export class FacebookAuthenticationUsecase {
   constructor (
     private readonly loadFacebookUserApi: LoadFacebookUserApi,
-    private readonly userAccountRepo: LoadUserAccountRepository & CreateUserAccountRepository
+    private readonly userAccountRepo: LoadUserAccountRepository & CreateFacebookAccountRepository
   ) { }
 
   async perform (params: FacebookAuthentication.Params): Promise<AuthenticationError> {
