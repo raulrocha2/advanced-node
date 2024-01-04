@@ -24,7 +24,7 @@ describe('FacebookAccount', () => {
   })
 
   test('should not update name if its not empty', () => {
-    const acccountData = { id: 'any_id',  name: 'any_name' }
+    const acccountData = { id: 'any_id', name: 'any_name' }
     const sut = new FacebookAccount(fbData, acccountData)
     expect(sut).toEqual({
       id: acccountData.id,

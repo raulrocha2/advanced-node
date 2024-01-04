@@ -4,6 +4,15 @@ import { FacebookAuthenticationUsecase } from '@/data/usecases'
 import { AuthenticationError } from '@/domain/errors'
 import { mock, MockProxy } from 'jest-mock-extended'
 
+jest.mock('@/domain/models/facebook-account', () => {
+  return {
+    FacebookAccount: jest.fn().mockImplementation(() => {
+      return {
+        any: 'any'
+      }
+    })
+  }
+})
 
 describe('FacebookAuthenticationUsecase', () => {
   let sut: FacebookAuthenticationUsecase
@@ -39,44 +48,9 @@ describe('FacebookAuthenticationUsecase', () => {
     expect(userAccountRepo.load).toHaveBeenCalledTimes(1)
   })
 
-  test('should create account with facebook data', async () => {
+  test('should call SaveFacebookAccountRepo with FacebookAccount', async () => {
     await sut.perform({ token })
-    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledWith({
-      name: 'any_fb_name',
-      email: 'any_fb_email',
-      facebookId: 'any_fb_id'
-     })
-    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledTimes(1)
-  })
-  
-  test('should calls SaveFacebookAccountRepo when LoadFacebookUserApi returns data', async () => {
-    userAccountRepo.load.mockResolvedValue({
-      id: 'any_id',
-      name: 'any_name'
-    })
-
-    await sut.perform({ token })
-    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledWith({
-      id: 'any_id',
-      email: 'any_fb_email',
-      name: 'any_name',
-      facebookId: 'any_fb_id'
-     })
-    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledTimes(1)
-  })
-
-  test('should update account name', async () => {
-    userAccountRepo.load.mockResolvedValue({
-      id: 'any_id'
-    })
-
-    await sut.perform({ token })
-    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledWith({
-      id: 'any_id',
-      email: 'any_fb_email',
-      name: 'any_fb_name',
-      facebookId: 'any_fb_id'
-     })
+    expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledWith({ any: 'any' })
     expect(userAccountRepo.saveWithFacebook).toHaveBeenCalledTimes(1)
   })
 })
