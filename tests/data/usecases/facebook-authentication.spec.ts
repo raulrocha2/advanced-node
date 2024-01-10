@@ -74,4 +74,28 @@ describe('FacebookAuthenticationUsecase', () => {
     const authResult = await sut.perform({ token })
     expect(authResult).toEqual(new AccessToken('any_generetad_token'))
   })
+
+  test('should rethrow if LoadFacebookUserApi throws', async () => {
+    facebookApiSpy.loadUser.mockRejectedValueOnce(new Error('any_fb_error'))
+    const promise = sut.perform({ token })
+    expect(promise).rejects.toThrow(new Error('any_fb_error'))
+  })
+
+  test('should rethrow if LoadUserAccountRepository throws', async () => {
+    userAccountRepo.load.mockRejectedValueOnce(new Error('any_load_account_error'))
+    const promise = sut.perform({ token })
+    expect(promise).rejects.toThrow(new Error('any_load_account_error'))
+  })
+
+  test('should rethrow if SaveFacebookAccountRepository throws', async () => {
+    userAccountRepo.saveWithFacebook.mockRejectedValueOnce(new Error('any_save_account_error'))
+    const promise = sut.perform({ token })
+    expect(promise).rejects.toThrow(new Error('any_save_account_error'))
+  })
+
+  test('should rethrow if TokenGenerator throws', async () => {
+    crypto.generateToken.mockRejectedValueOnce(new Error('any_token_error'))
+    const promise = sut.perform({ token })
+    expect(promise).rejects.toThrow(new Error('any_token_error'))
+  })
 })
