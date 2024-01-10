@@ -21,6 +21,7 @@ describe('FacebookAuthenticationUsecase', () => {
   let facebookApiSpy: MockProxy<LoadFacebookUserApi>
   let userAccountRepo: MockProxy<LoadUserAccountRepository & SaveFacebookAccountRepository>
   let crypto: MockProxy<TokenGenerator>
+  
   let token = 'any_token'
   beforeEach(() => {
     facebookApiSpy = mock<LoadFacebookUserApi>()
@@ -32,6 +33,7 @@ describe('FacebookAuthenticationUsecase', () => {
     })
     userAccountRepo.saveWithFacebook.mockResolvedValue({ id: 'any_account_id'})
     crypto = mock()
+    crypto.generateToken.mockResolvedValue('any_generetad_token')
     sut = new FacebookAuthenticationUsecase(facebookApiSpy, userAccountRepo, crypto)
   })
 
@@ -66,5 +68,10 @@ describe('FacebookAuthenticationUsecase', () => {
       expirationInMs: AccessToken.expirationInMs
     })
     expect(crypto.generateToken).toHaveBeenCalledTimes(1)
+  })
+
+  test('should return AccessToken on success', async () => {
+    const authResult = await sut.perform({ token })
+    expect(authResult).toEqual(new AccessToken('any_generetad_token'))
   })
 })
