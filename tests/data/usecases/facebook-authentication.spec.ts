@@ -3,6 +3,7 @@ import { TokenGenerator } from '@/data/contracts/crypto'
 import { LoadUserAccountRepository, SaveFacebookAccountRepository } from '@/data/contracts/repos'
 import { FacebookAuthenticationUsecase } from '@/data/usecases'
 import { AuthenticationError } from '@/domain/errors'
+import { AccessToken } from '@/domain/models'
 import { mock, MockProxy } from 'jest-mock-extended'
 
 jest.mock('@/domain/models/facebook-account', () => {
@@ -60,7 +61,10 @@ describe('FacebookAuthenticationUsecase', () => {
 
   test('should call TokenGenerator with correct params', async () => {
     await sut.perform({ token })
-    expect(crypto.generateToken).toHaveBeenCalledWith({ key: 'any_account_id' })
+    expect(crypto.generateToken).toHaveBeenCalledWith({ 
+      key: 'any_account_id' ,
+      expirationInMs: AccessToken.expirationInMs
+    })
     expect(crypto.generateToken).toHaveBeenCalledTimes(1)
   })
 })
