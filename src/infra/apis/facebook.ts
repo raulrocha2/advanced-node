@@ -18,11 +18,19 @@ export class FacebookApi {
         grant_type: this.grantType
       }
     })
-    await this.httpGetClient.get({
+    const debugToken = await this.httpGetClient.get({
       url: `${this.baseUrl}/debug_token`,
       params: {
         access_token: appToken.access_token,
         input_token: params.token
+      }
+    })
+
+    await this.httpGetClient.get({
+      url: `${this.baseUrl}/${debugToken.data.user_id}`,
+      params: {
+        fields: ['id', 'name', 'email'].join(','), 
+        access_token: 'any_access_token'
       }
     })
   }
