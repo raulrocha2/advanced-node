@@ -1,6 +1,23 @@
 import { LoadFacebookUserApi } from "@/data/contracts/apis"
 import { HttpGetClient } from "../http"
 
+
+type AppToken = {
+  access_token: string
+}
+
+type DebugToken = {
+  data: {
+    user_id: string
+  }
+}
+
+type UserInfo = {
+  id: string
+  name: string
+  email: string
+}
+
 export class FacebookApi implements LoadFacebookUserApi {
   private readonly baseUrl = 'https://graph.facebook.com'
   constructor (
@@ -10,7 +27,18 @@ export class FacebookApi implements LoadFacebookUserApi {
     private readonly grantType: string
   ) { }
   async loadUser (params: LoadFacebookUserApi.Params): Promise<LoadFacebookUserApi.Result> {
-    const appToken = await this.httpGetClient.get({ 
+
+    const {id, name, email} = await this.getUserFbInfo(params.token)
+
+    return {
+      facebookId: id,
+      name: name,
+      email: email
+    }
+  }
+
+  private async getAppToken (): Promise<AppToken> {
+    return this.httpGetClient.get<AppToken>({ 
       url: `${this.baseUrl}/oauth/access_token`,
       params: {
         client_id: this.clientId, 
@@ -18,26 +46,27 @@ export class FacebookApi implements LoadFacebookUserApi {
         grant_type: this.grantType
       }
     })
-    const debugToken = await this.httpGetClient.get({
+  }
+
+  private async getDebugToken (clientToken: string): Promise<DebugToken> {
+    const { access_token } = await this.getAppToken()
+    return this.httpGetClient.get({
       url: `${this.baseUrl}/debug_token`,
       params: {
-        access_token: appToken.access_token,
-        input_token: params.token
+        access_token: access_token,
+        input_token: clientToken
       }
     })
+  }
 
-    const userFbInfo = await this.httpGetClient.get({
-      url: `${this.baseUrl}/${debugToken.data.user_id}`,
+  private async getUserFbInfo (clientToken: string): Promise<UserInfo> {
+    const { data } = await this.getDebugToken(clientToken)
+    return this.httpGetClient.get({
+      url: `${this.baseUrl}/${data.user_id}`,
       params: {
         fields: ['id', 'name', 'email'].join(','), 
-        access_token: 'any_access_token'
+        access_token: clientToken
       }
     })
-
-    return {
-      facebookId: userFbInfo.id,
-      name: userFbInfo.name,
-      email: userFbInfo.email
-    }
   }
 }

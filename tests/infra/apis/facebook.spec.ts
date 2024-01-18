@@ -62,7 +62,7 @@ describe('FacebookApi', () => {
       url: `https://graph.facebook.com/any_user_id`,
       params: {
         fields: 'id,name,email', 
-        access_token: 'any_access_token'
+        access_token: 'any_client_token'
       }
     })
   })
