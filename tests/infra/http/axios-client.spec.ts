@@ -1,18 +1,7 @@
-import { HttpGetClient } from "@/infra/http"
+import { AxiosHttpClient } from "@/infra/http";
 import axios from "axios";
 
 jest.mock('axios')
-
-class AxiosHttpClient {
- async get(args: HttpGetClient.Params): Promise<any> {
-    const result = await axios.get(args.url, {
-      params: args.params
-    })
-
-    return result
- }
-
-}
 
 describe('AxiosHttpClient', () => {
   let sut: AxiosHttpClient
@@ -36,31 +25,25 @@ describe('AxiosHttpClient', () => {
 
   describe('get', () => {
     test('should call get with correct params', async () => {
-        await sut.get({
-          url,
-          params
-        })
+        await sut.get({ url, params })
 
-        expect(fakeAxios.get).toHaveBeenCalledWith('any_url', {
-          params
-        })
+        expect(fakeAxios.get).toHaveBeenCalledWith('any_url', { params })
         expect(fakeAxios.get).toHaveBeenCalledTimes(1)
     })
 
     test('should return data on success', async () => {
-      fakeAxios.get.mockResolvedValueOnce({
-        data: 'any_data',
-        status: 200
-      })
-      const result = await sut.get({
-        url,
-        params
-      })
-
+      const result = await sut.get({ url, params })
+      
       expect(result).toEqual({
         data: 'any_data',
         status: 200
       })
-  })
+    })
+
+    test('should rethrow if get throws', async () => {
+      fakeAxios.get.mockRejectedValueOnce(new Error('http_error'))
+      const promise = sut.get({ url, params })
+      await expect(promise).rejects.toThrow(new Error('http_error'))
+    })
   })
 })
