@@ -38,7 +38,7 @@ export class FacebookApi implements LoadFacebookUserApi {
   }
 
   private async getAppToken (): Promise<AppToken> {
-    return this.httpGetClient.get<AppToken>({ 
+    return this.httpGetClient.get({ 
       url: `${this.baseUrl}/oauth/access_token`,
       params: {
         client_id: this.clientId, 
