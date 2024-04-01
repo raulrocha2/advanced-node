@@ -8,6 +8,7 @@ class FacebookLoginController {
     private readonly facebookAuth: FacebookAuthentication
   ) { }
   async handle (httpRequest: any): Promise<HttpResponse> {
+   try {
     if(httpRequest.token === '' || httpRequest.token === null || httpRequest.token === undefined) {
       return {
         statusCode: 400,
@@ -29,10 +30,24 @@ class FacebookLoginController {
         data: result
       }
     }
+   } catch (error) {
+    return {
+      statusCode: 500,
+      data: new ServerError(error)
+    }
+   }
   }
 }
 
 type HttpResponse = { statusCode: number, data: any}
+
+class ServerError extends Error {
+  constructor (error?: any) {
+    super('Server failed. Try again soon')
+    this.name = 'ServerError'
+    this.stack = error?.stack
+  }
+}
 
 describe('FacebookLoginController', () => {
   let sut: FacebookLoginController
@@ -94,6 +109,16 @@ describe('FacebookLoginController', () => {
       data: {
         accessToken: 'any_value'
       }
+    })
+  })
+
+  test('should return 500 if authentication throws', async  () => {
+    const error = new Error('infra_error')
+    facebookAuth.perform.mockRejectedValueOnce(error)
+    const httpResponse = await sut.handle({ token: 'invalid_token'})
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(error)
     })
   })
 })
