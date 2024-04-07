@@ -1,6 +1,6 @@
 import { getRepository } from "typeorm"
-import { LoadUserAccountRepo, LoadUserAccountRepository, SaveFacebookAccountRepo, SaveFacebookAccountRepository } from "@/data/contracts/repos"
 import { PgUser } from "@/infra/postgres/entities"
+import { LoadUserAccountRepo, LoadUserAccountRepository, SaveFacebookAccountRepo, SaveFacebookAccountRepository } from "@/data/contracts/repos"
 
 export class PgUserAccountRepository implements LoadUserAccountRepository, SaveFacebookAccountRepository {
   private readonly pgUserRepo =  getRepository(PgUser)

@@ -1,1 +1,1 @@
-export * from './require-string'
+export * from './required-string'
