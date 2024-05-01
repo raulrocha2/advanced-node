@@ -1,4 +1,4 @@
-import { RequiredFieldError } from "@/application/controllers/errors/http";
+import { RequiredFieldError } from "@/application/errors/http";
 
 export class RequiredStringValidator {
   constructor(
